@@ -66,8 +66,16 @@
               <Icon v-else name="eye" size="md" />
             </button>
           </div>
-          <div class="mt-1 flex items-center justify-between">
-            <span></span>
+          <div class="mt-2 flex items-center justify-between gap-3" style="margin-top: 1rem !important;">
+            <label class="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-dark-300">
+              <input
+                v-model="rememberMe"
+                type="checkbox"
+                :disabled="authActionDisabled"
+                class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-dark-600 dark:bg-dark-800"
+              />
+              <span>{{ t('auth.rememberMe') }}</span>
+            </label>
             <router-link
               v-if="passwordResetEnabled && !backendModeEnabled"
               to="/forgot-password"
@@ -219,6 +227,7 @@ import { clearAllAffiliateReferralCodes } from '@/utils/oauthAffiliate'
 
 const { t } = useI18n()
 const LOGIN_AGREEMENT_STORAGE_KEY = 'sub2api_login_agreement_consent'
+const LOGIN_REMEMBER_STORAGE_KEY = 'sub2api_login_remember'
 
 // ==================== Router & Stores ====================
 
@@ -262,6 +271,8 @@ const show2FAModal = ref<boolean>(false)
 const totpTempToken = ref<string>('')
 const totpUserEmailMasked = ref<string>('')
 const totpModalRef = ref<InstanceType<typeof TotpLoginModal> | null>(null)
+
+const rememberMe = ref<boolean>(false)
 
 const formData = reactive({
   email: '',
@@ -313,6 +324,8 @@ onMounted(async () => {
     errorMessage.value = message
     appStore.showWarning(message)
   }
+
+  loadRememberedLogin()
 
   try {
     const settings = await getPublicSettings()
@@ -399,6 +412,59 @@ function rejectLoginAgreement(): void {
   showAgreementModal.value = false
   appStore.showWarning(t('legal.loginAgreementPrompt.loginRejectedWarning'))
 }
+
+function loadRememberedLogin(): void {
+  try {
+    const raw = localStorage.getItem(LOGIN_REMEMBER_STORAGE_KEY)
+    if (!raw) {
+      return
+    }
+
+    const parsed = JSON.parse(raw) as {
+      remember?: boolean
+      email?: string
+      password?: string
+    }
+
+    if (!parsed.remember) {
+      localStorage.removeItem(LOGIN_REMEMBER_STORAGE_KEY)
+      return
+    }
+
+    rememberMe.value = true
+    formData.email = parsed.email || ''
+    formData.password = parsed.password || ''
+  } catch {
+    localStorage.removeItem(LOGIN_REMEMBER_STORAGE_KEY)
+  }
+}
+
+function persistRememberedLogin(): void {
+  if (!rememberMe.value) {
+    clearRememberedLogin()
+    return
+  }
+
+  localStorage.setItem(
+    LOGIN_REMEMBER_STORAGE_KEY,
+    JSON.stringify({
+      remember: true,
+      email: formData.email,
+      password: formData.password,
+      updated_at: new Date().toISOString()
+    })
+  )
+}
+
+function clearRememberedLogin(): void {
+  localStorage.removeItem(LOGIN_REMEMBER_STORAGE_KEY)
+}
+
+watch(rememberMe, (value) => {
+  if (!value) {
+    clearRememberedLogin()
+  }
+})
 
 // ==================== Turnstile Handlers ====================
 
@@ -493,6 +559,8 @@ async function handleLogin(): Promise<void> {
       return
     }
 
+    persistRememberedLogin()
+
     // Show success toast
     clearAllAffiliateReferralCodes()
     appStore.showSuccess(t('auth.loginSuccess'))
@@ -525,6 +593,7 @@ async function handle2FAVerify(code: string): Promise<void> {
 
   try {
     await authStore.login2FA(totpTempToken.value, code)
+    persistRememberedLogin()
 
     // Close modal and show success
     show2FAModal.value = false

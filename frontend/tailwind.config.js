@@ -50,6 +50,7 @@ export default {
       },
       fontFamily: {
         sans: [
+          '48NH',
           'system-ui',
           '-apple-system',
           'BlinkMacSystemFont',
