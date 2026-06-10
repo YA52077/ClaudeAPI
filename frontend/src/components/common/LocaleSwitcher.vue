@@ -3,15 +3,18 @@
     <button
       @click="toggleDropdown"
       :disabled="switching"
-      class="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-dark-700"
+      class="inline-flex h-6 items-center gap-[3px] border-r border-gray-200/80 pr-2 pl-0 text-[11px] font-medium text-gray-600 transition-colors hover:text-gray-900 disabled:opacity-60 dark:border-dark-600 dark:text-dark-300 dark:hover:text-white"
       :title="currentLocale?.name"
+      :aria-label="currentLocale?.name"
     >
-      <span class="text-base">{{ currentLocale?.flag }}</span>
-      <span class="hidden sm:inline">{{ currentLocale?.code.toUpperCase() }}</span>
+      <span class="locale-switcher-icon" aria-hidden="true">
+        <span class="locale-switcher-char locale-switcher-char--top" style="font-family: '48NH' !important;">文</span>
+        <span class="locale-switcher-char locale-switcher-char--bottom" style="font-family: '48NH' !important;">A</span>
+      </span>
       <Icon
         name="chevronDown"
         size="xs"
-        class="text-gray-400 transition-transform duration-200"
+        class="text-[8px] text-gray-400 transition-transform duration-200"
         :class="{ 'rotate-180': isOpen }"
       />
     </button>
@@ -19,22 +22,19 @@
     <transition name="dropdown">
       <div
         v-if="isOpen"
-        class="absolute right-0 z-50 mt-1 w-32 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg dark:border-dark-700 dark:bg-dark-800"
+        class="absolute left-0 top-full z-50 mt-2 w-[7.6rem] overflow-hidden rounded-[1rem] border border-gray-200/75 bg-[#fffdf9]/98 p-1.5 shadow-[0_8px_18px_rgba(15,23,42,0.08)] backdrop-blur-sm dark:border-dark-700 dark:bg-dark-800/96"
       >
         <button
           v-for="locale in availableLocales"
           :key="locale.code"
           :disabled="switching"
           @click="selectLocale(locale.code)"
-          class="flex w-full items-center gap-2 px-3 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-dark-700"
+          class="flex w-full items-center rounded-lg px-2.5 py-1.5 text-left text-[0.9rem] font-medium tracking-[-0.01em] text-gray-700 transition-colors hover:bg-gray-50/70 dark:text-gray-100 dark:hover:bg-dark-700/70"
           :class="{
-            'bg-primary-50 text-primary-600 dark:bg-primary-900/20 dark:text-primary-400':
-              locale.code === currentLocaleCode
+            'text-gray-900 dark:text-white': locale.code === currentLocaleCode
           }"
         >
-          <span class="text-base">{{ locale.flag }}</span>
           <span>{{ locale.name }}</span>
-          <Icon v-if="locale.code === currentLocaleCode" name="check" size="sm" class="ml-auto text-primary-500" />
         </button>
       </div>
     </transition>
@@ -90,6 +90,34 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+.locale-switcher-icon {
+  position: relative;
+  display: inline-flex;
+  height: 1.05rem;
+  width: 0.86rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.locale-switcher-char {
+  position: absolute;
+  line-height: 1;
+  font-weight: 500;
+  color: currentColor;
+}
+
+.locale-switcher-char--top {
+  top: -0.1rem;
+  left: -0.03rem;
+  font-size: 0.7rem;
+}
+
+.locale-switcher-char--bottom {
+  right: -0.03rem;
+  bottom: -0.12rem;
+  font-size: 0.62rem;
+}
+
 .dropdown-enter-active,
 .dropdown-leave-active {
   transition: all 0.15s ease;

@@ -38,9 +38,6 @@
           <span class="hidden sm:inline">{{ t('nav.docs') }}</span>
         </a>
 
-        <!-- Language Switcher -->
-        <LocaleSwitcher />
-
         <!-- Subscription Progress (for users with active subscriptions) -->
         <SubscriptionProgressMini v-if="user" />
 
@@ -128,7 +125,7 @@
 
                 <a
                   v-if="authStore.isAdmin"
-                  href="https://github.com/Wei-Shaw/sub2api"
+                  href="https://github.com/YA52077/ClaudeAPI"
                   target="_blank"
                   rel="noopener noreferrer"
                   @click="closeDropdown"
@@ -169,6 +166,23 @@
                   <span class="font-medium text-gray-700 dark:text-gray-300">{{
                     contactInfo
                   }}</span>
+                </div>
+                <div class="mt-2 flex items-center gap-2 pl-0.5 text-xs text-gray-500 dark:text-gray-400">
+                  <svg
+                    class="h-3.5 w-3.5 flex-shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M8.625 9.75a3.375 3.375 0 116.75 0c0 1.307-.67 2.396-1.688 3.037-.936.59-1.687 1.31-1.687 2.338m.375 3h.008v.008h-.008v-.008zM21 12c0 4.97-4.03 9-9 9a8.962 8.962 0 01-4.255-1.07L3 20.25l1.32-4.29A8.962 8.962 0 013 12c0-4.97 4.03-9 9-9s9 4.03 9 9z"
+                    />
+                  </svg>
+                  <span>QQ群:</span>
+                  <span class="font-medium text-gray-700 dark:text-gray-300">746280829</span>
                 </div>
               </div>
 
@@ -218,7 +232,6 @@ import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useAppStore, useAuthStore, useOnboardingStore } from '@/stores'
 import { useAdminSettingsStore } from '@/stores/adminSettings'
-import LocaleSwitcher from '@/components/common/LocaleSwitcher.vue'
 import SubscriptionProgressMini from '@/components/common/SubscriptionProgressMini.vue'
 import AnnouncementBell from '@/components/common/AnnouncementBell.vue'
 import Icon from '@/components/icons/Icon.vue'

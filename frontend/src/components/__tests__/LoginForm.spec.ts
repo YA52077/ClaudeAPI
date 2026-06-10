@@ -8,6 +8,8 @@ import { setActivePinia, createPinia } from 'pinia'
 import { defineComponent, reactive, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 
+const REMEMBER_KEY = 'sub2api_login_remember'
+
 // Mock 所有外部依赖
 const mockLogin = vi.fn()
 const mockLogin2FA = vi.fn()
@@ -41,8 +43,25 @@ const LoginFormTestComponent = defineComponent({
   setup() {
     const authStore = useAuthStore()
     const formData = reactive({ email: '', password: '' })
+    const rememberMe = ref(false)
     const isLoading = ref(false)
     const errorMessage = ref('')
+
+    const persistRememberedLogin = () => {
+      if (!rememberMe.value) {
+        localStorage.removeItem(REMEMBER_KEY)
+        return
+      }
+
+      localStorage.setItem(
+        REMEMBER_KEY,
+        JSON.stringify({
+          remember: true,
+          email: formData.email,
+          password: formData.password,
+        })
+      )
+    }
 
     const handleLogin = async () => {
       if (!formData.email || !formData.password) {
@@ -65,6 +84,7 @@ const LoginFormTestComponent = defineComponent({
           return
         }
 
+        persistRememberedLogin()
         mockPush('/dashboard')
       } catch (error: any) {
         errorMessage.value = error.message || '登录失败'
@@ -73,12 +93,13 @@ const LoginFormTestComponent = defineComponent({
       }
     }
 
-    return { formData, isLoading, errorMessage, handleLogin }
+    return { formData, rememberMe, isLoading, errorMessage, handleLogin }
   },
   template: `
     <form @submit.prevent="handleLogin">
       <input id="email" v-model="formData.email" type="email" />
       <input id="password" v-model="formData.password" type="password" />
+      <input id="remember" v-model="rememberMe" type="checkbox" />
       <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
       <button type="submit" :disabled="isLoading">登录</button>
     </form>
@@ -89,6 +110,7 @@ describe('LoginForm 核心逻辑', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     vi.clearAllMocks()
+    localStorage.clear()
   })
 
   it('成功登录后跳转到 dashboard', async () => {
@@ -174,5 +196,45 @@ describe('LoginForm 核心逻辑', () => {
     await flushPromises()
 
     expect(wrapper.find('button').attributes('disabled')).toBeUndefined()
+  })
+
+  it('勾选记住我后登录成功会保存邮箱和密码', async () => {
+    mockLogin.mockResolvedValue({
+      access_token: 'token',
+      token_type: 'Bearer',
+      user: { id: 1, username: 'test', email: 'test@example.com', role: 'user', balance: 0, concurrency: 5, status: 'active', allowed_groups: null, created_at: '', updated_at: '' },
+    })
+
+    const wrapper = mount(LoginFormTestComponent)
+
+    await wrapper.find('#email').setValue('test@example.com')
+    await wrapper.find('#password').setValue('password123')
+    await wrapper.find('#remember').setValue(true)
+    await wrapper.find('form').trigger('submit')
+    await flushPromises()
+
+    expect(JSON.parse(localStorage.getItem(REMEMBER_KEY) || '{}')).toMatchObject({
+      remember: true,
+      email: 'test@example.com',
+      password: 'password123',
+    })
+  })
+
+  it('未勾选记住我时登录成功会清除本地保存', async () => {
+    localStorage.setItem(REMEMBER_KEY, JSON.stringify({ remember: true, email: 'old@example.com', password: 'oldpass' }))
+    mockLogin.mockResolvedValue({
+      access_token: 'token',
+      token_type: 'Bearer',
+      user: { id: 1, username: 'test', email: 'test@example.com', role: 'user', balance: 0, concurrency: 5, status: 'active', allowed_groups: null, created_at: '', updated_at: '' },
+    })
+
+    const wrapper = mount(LoginFormTestComponent)
+
+    await wrapper.find('#email').setValue('test@example.com')
+    await wrapper.find('#password').setValue('password123')
+    await wrapper.find('form').trigger('submit')
+    await flushPromises()
+
+    expect(localStorage.getItem(REMEMBER_KEY)).toBeNull()
   })
 })
