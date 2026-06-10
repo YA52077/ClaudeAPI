@@ -15,7 +15,7 @@
   <!-- Default Home Page -->
   <div
     v-else
-    class="relative flex min-h-screen flex-col overflow-hidden bg-gradient-to-br from-gray-50 via-primary-50/30 to-gray-100 dark:from-dark-950 dark:via-dark-900 dark:to-dark-950"
+    class="relative flex min-h-screen flex-col bg-gradient-to-br from-gray-50 via-primary-50/30 to-gray-100 dark:from-dark-950 dark:via-dark-900 dark:to-dark-950"
   >
     <!-- Background Decorations -->
     <div class="pointer-events-none absolute inset-0 overflow-hidden">
@@ -37,27 +37,27 @@
     </div>
 
     <!-- Header -->
-    <header class="relative z-20 px-6 py-4">
-      <nav class="mx-auto flex max-w-6xl items-center justify-between">
+    <header class="fixed inset-x-0 top-0 z-30 border-b border-gray-200/55 bg-white/80 px-3 py-3 backdrop-blur-xl dark:border-dark-700/60 dark:bg-dark-950/75 sm:px-6">
+      <nav class="mx-auto flex max-w-6xl items-center justify-between gap-2">
         <!-- Logo -->
-        <div class="flex items-center">
+        <div class="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
           <div class="h-10 w-10 overflow-hidden rounded-xl shadow-md">
             <img :src="siteLogo || '/logo.png'" alt="Logo" class="h-full w-full object-contain" />
           </div>
+          <span class="truncate text-base font-semibold tracking-tight text-primary-500 dark:text-primary-400 sm:text-2xl" style="font-family: sans-serif !important;">
+            {{ siteName }}
+          </span>
         </div>
 
         <!-- Nav Actions -->
-        <div class="flex items-center gap-3">
-          <!-- Language Switcher -->
-          <LocaleSwitcher />
-
+        <div class="ml-2 flex shrink-0 items-center gap-1.5 sm:gap-2">
           <!-- Doc Link -->
           <a
             v-if="docUrl"
             :href="docUrl"
             target="_blank"
             rel="noopener noreferrer"
-            class="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:text-dark-400 dark:hover:bg-dark-800 dark:hover:text-white"
+            class="hidden rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:text-dark-400 dark:hover:bg-dark-800 dark:hover:text-white sm:inline-flex"
             :title="t('home.viewDocs')"
           >
             <Icon name="book" size="md" />
@@ -66,11 +66,18 @@
           <!-- Theme Toggle -->
           <button
             @click="toggleTheme"
-            class="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:text-dark-400 dark:hover:bg-dark-800 dark:hover:text-white"
+            class="inline-flex h-7 w-10 items-center rounded-full border border-gray-200/80 bg-white/90 px-0.5 shadow-sm backdrop-blur-sm transition-all hover:border-gray-300 hover:bg-white dark:border-dark-600 dark:bg-dark-800/90 dark:hover:border-dark-500 dark:hover:bg-dark-800 sm:h-8 sm:w-12 "
             :title="isDark ? t('home.switchToLight') : t('home.switchToDark')"
+            :aria-label="isDark ? t('home.switchToLight') : t('home.switchToDark')"
+            style="width: 2.7rem !important;height: 1.6rem !important;"
           >
-            <Icon v-if="isDark" name="sun" size="md" />
-            <Icon v-else name="moon" size="md" />
+            <span
+              class="flex h-5 w-5 items-center justify-center rounded-full bg-gray-100 text-gray-500 shadow-sm transition-all duration-300 dark:bg-dark-700 dark:text-dark-200 sm:h-6 sm:w-6"
+              :class="isDark ? 'translate-x-4 bg-primary-500 text-white shadow-primary-500/30 sm:translate-x-5' : 'translate-x-0'"
+            >
+              <Icon v-if="isDark" name="moon" size="xs" />
+              <Icon v-else name="sun" size="xs" />
+            </span>
           </button>
 
           <!-- Login / Dashboard Button -->
@@ -102,44 +109,69 @@
           <router-link
             v-else
             to="/login"
-            class="inline-flex items-center rounded-full bg-gray-900 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-700"
+            class="inline-flex h-7 items-center whitespace-nowrap rounded-full border border-gray-200/70 bg-white/85 px-3 text-[10px] font-medium text-gray-900 shadow-sm backdrop-blur-sm transition-colors hover:bg-gray-50 dark:border-dark-600 dark:bg-dark-800/85 dark:text-white dark:hover:bg-dark-700 sm:h-auto sm:px-4 sm:py-1.5 sm:text-xs"
           >
-            {{ t('home.login') }}
+            {{ t('home.tryNow') }}
           </router-link>
         </div>
       </nav>
     </header>
 
     <!-- Main Content -->
-    <main class="relative z-10 flex-1 px-6 py-16">
+    <main class="relative z-10 flex-1 px-4 pb-16 pt-28 sm:px-6 sm:pt-32">
       <div class="mx-auto max-w-6xl">
         <!-- Hero Section - Left/Right Layout -->
         <div class="mb-12 flex flex-col items-center justify-between gap-12 lg:flex-row lg:gap-16">
           <!-- Left: Text Content -->
           <div class="flex-1 text-center lg:text-left">
-            <h1
-              class="mb-4 text-4xl font-bold text-gray-900 dark:text-white md:text-5xl lg:text-6xl"
-            >
-              {{ siteName }}
-            </h1>
-            <p class="mb-8 text-lg text-gray-600 dark:text-dark-300 md:text-xl">
-              {{ siteSubtitle }}
-            </p>
-
-            <!-- CTA Button -->
-            <div>
-              <router-link
-                :to="isAuthenticated ? dashboardPath : '/login'"
-                class="btn btn-primary px-8 py-3 text-base shadow-lg shadow-primary-500/30"
+            <div class="mx-auto max-w-2xl lg:mx-0">
+              <h6
+                class="mb-5 text-4xl font-bold tracking-tight text-gray-900 dark:text-white md:text-5xl "
               >
-                {{ isAuthenticated ? t('home.goToDashboard') : t('home.getStarted') }}
-                <Icon name="arrowRight" size="md" class="ml-2" :stroke-width="2" />
-              </router-link>
+                {{ t('home.heroTitle') }}
+              </h6>
+              <p class="mb-10 text-lg leading-9 text-gray-600 dark:text-dark-300">
+                {{ t('home.heroDescriptionLong') }}
+              </p>
+
+              <!-- <div class="rounded-[28px] border border-primary-100/80 bg-white/75 p-6 shadow-xl shadow-primary-500/10 backdrop-blur-sm dark:border-primary-900/40 dark:bg-dark-900/70">
+                <div class="mb-3 inline-flex items-center rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-xs font-medium text-primary-600 dark:border-primary-800 dark:bg-primary-900/30 dark:text-primary-300">
+                  {{ t('home.promo.badge') }}
+                </div>
+                <h2 class="mb-3 text-2xl font-semibold text-gray-900 dark:text-white">
+                  {{ t('home.promo.title') }}
+                </h2>
+                <p class="mb-5 text-base leading-7 text-gray-600 dark:text-dark-300">
+                  {{ t('home.promo.description') }}
+                </p>
+                <div class="mb-6 flex flex-wrap gap-3 text-sm">
+                  <span class="rounded-full bg-primary-500 px-4 py-2 font-semibold text-white shadow-sm">
+                    {{ t('home.promo.primaryTag') }}
+                  </span>
+                  <span class="rounded-full border border-primary-100 bg-white px-4 py-2 text-primary-600 shadow-sm dark:border-dark-600 dark:bg-dark-800 dark:text-primary-300">
+                    {{ t('home.promo.secondaryTag') }}
+                  </span>
+                  <span class="rounded-full border border-gray-200 bg-white px-4 py-2 text-gray-500 shadow-sm dark:border-dark-600 dark:bg-dark-800 dark:text-dark-300">
+                    {{ t('home.promo.tertiaryTag') }}
+                  </span>
+                </div>
+              </div> -->
+
+              <!-- CTA Button -->
+              <div class="mt-8">
+                <router-link
+                  :to="isAuthenticated ? dashboardPath : '/login'"
+                  class="btn btn-primary px-8 py-3 text-base shadow-lg shadow-primary-500/30"
+                >
+                  {{ isAuthenticated ? t('home.goToDashboard') : t('home.getStarted') }}
+                  <Icon name="arrowRight" size="md" class="ml-2" :stroke-width="2" />
+                </router-link>
+              </div>
             </div>
           </div>
 
           <!-- Right: Terminal Animation -->
-          <div class="flex flex-1 justify-center lg:justify-end">
+          <div class="flex w-full flex-1 justify-center overflow-hidden lg:justify-end">
             <div class="terminal-container">
               <div class="terminal-window">
                 <!-- Window header -->
@@ -149,7 +181,7 @@
                     <span class="btn-minimize"></span>
                     <span class="btn-maximize"></span>
                   </div>
-                  <span class="terminal-title">terminal</span>
+                  <span class="terminal-title">Terminal</span>
                 </div>
                 <!-- Terminal content -->
                 <div class="terminal-body">
@@ -354,7 +386,7 @@
             >
           </div>
           <!-- More - Coming Soon -->
-          <div
+          <!-- <div
             class="flex items-center gap-2 rounded-xl border border-gray-200/50 bg-white/40 px-5 py-3 opacity-60 backdrop-blur-sm dark:border-dark-700/50 dark:bg-dark-800/40"
           >
             <div
@@ -367,13 +399,13 @@
               class="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-500 dark:bg-dark-700 dark:text-dark-400"
               >{{ t('home.providers.soon') }}</span
             >
-          </div>
+          </div> -->
         </div>
       </div>
     </main>
 
     <!-- Footer -->
-    <footer class="relative z-10 border-t border-gray-200/50 px-6 py-8 dark:border-dark-800/50">
+    <footer class="relative z-10 border-t border-gray-200/50 px-4 py-8 dark:border-dark-800/50 sm:px-6">
       <div
         class="mx-auto flex max-w-6xl flex-col items-center justify-center gap-4 text-center sm:flex-row sm:text-left"
       >
@@ -390,6 +422,15 @@
           >
             {{ t('home.docs') }}
           </a>
+          <a
+            href="https://sc58.cn"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-dark-400 dark:hover:text-white"
+          >
+            GeePay
+          </a>
+          <span class="text-sm text-gray-500 dark:text-dark-400">|</span>
           <a
             :href="githubUrl"
             target="_blank"
@@ -408,7 +449,6 @@
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore, useAppStore } from '@/stores'
-import LocaleSwitcher from '@/components/common/LocaleSwitcher.vue'
 import Icon from '@/components/icons/Icon.vue'
 
 const { t } = useI18n()
@@ -417,9 +457,8 @@ const authStore = useAuthStore()
 const appStore = useAppStore()
 
 // Site settings - directly from appStore (already initialized from injected config)
-const siteName = computed(() => appStore.cachedPublicSettings?.site_name || appStore.siteName || 'Sub2API')
+const siteName = computed(() => appStore.cachedPublicSettings?.site_name || appStore.siteName || 'ClaudeAPI')
 const siteLogo = computed(() => appStore.cachedPublicSettings?.site_logo || appStore.siteLogo || '')
-const siteSubtitle = computed(() => appStore.cachedPublicSettings?.site_subtitle || 'AI API Gateway Platform')
 const docUrl = computed(() => appStore.cachedPublicSettings?.doc_url || appStore.docUrl || '')
 const homeContent = computed(() => appStore.cachedPublicSettings?.home_content || '')
 
@@ -489,7 +528,7 @@ onMounted(() => {
 
 /* Terminal Window */
 .terminal-window {
-  width: 420px;
+  width: min(420px, calc(100vw - 2rem));
   background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
   border-radius: 14px;
   box-shadow:
@@ -498,6 +537,7 @@ onMounted(() => {
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   overflow: hidden;
   transform: perspective(1000px) rotateX(2deg) rotateY(-2deg);
+  transform-origin: center top;
   transition: transform 0.3s ease;
 }
 
@@ -630,6 +670,26 @@ onMounted(() => {
   51%,
   100% {
     opacity: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .terminal-window {
+    transform: none;
+  }
+
+  .terminal-window:hover {
+    transform: translateY(-2px);
+  }
+
+  .terminal-header {
+    padding: 10px 14px;
+  }
+
+  .terminal-body {
+    padding: 16px 18px;
+    font-size: 13px;
+    line-height: 1.85;
   }
 }
 
