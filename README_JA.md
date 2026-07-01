@@ -1,4 +1,4 @@
-# Sub2API
+# ClaudeAPI
 
 <div align="center">
 
