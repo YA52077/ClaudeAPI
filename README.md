@@ -3,14 +3,17 @@
 
 # ClaudeAPI
 
+[![在线体验](https://img.shields.io/badge/在线体验-codex.48nh.com-18b8b1?style=for-the-badge)](https://codex.48nh.com)
+
 **统一的大模型 API 网关与运营管理平台**
 
-[![Version](https://img.shields.io/badge/version-v0.1.155-14b8a6.svg)](backend/cmd/server/VERSION)
+[![Version](https://img.shields.io/badge/version-v0.1.156-14b8a6.svg)](backend/cmd/server/VERSION)
 [![Go](https://img.shields.io/badge/Go-1.26.5-00ADD8.svg)](https://go.dev/)
 [![Vue](https://img.shields.io/badge/Vue-3-4FC08D.svg)](https://vuejs.org/)
 [![License](https://img.shields.io/badge/license-LGPL--3.0--or--later-blue.svg)](LICENSE)
 
-[项目仓库](https://github.com/YA52077/ClaudeAPI) · [问题反馈](https://github.com/YA52077/ClaudeAPI/issues) · QQ 群：`746280829`
+[项目仓库](https://github.com/YA52077/ClaudeAPI) · [问题反馈](https://github.com/YA52077/ClaudeAPI/issues) · QQ：`7504544`| QQ 群：`746280829`
+
 </div>
 
 ---
@@ -18,10 +21,6 @@
 ## 项目简介
 
 ClaudeAPI 是一个面向个人开发者、团队和 API 运营场景的统一 AI API Gateway。平台将多个上游账号和模型能力集中到一个管理后台，通过统一 API Key 对外提供服务，并负责账号调度、请求转发、故障切换、用量统计、配额与计费管理。
-
-本仓库在开源项目 [Wei-Shaw/sub2api](https://github.com/Wei-Shaw/sub2api) 的基础上持续同步，并维护独立的 ClaudeAPI 产品品牌和前端体验。当前代码版本为 **v0.1.155**。
-
-> ClaudeAPI 是本仓库的产品名称。为了保持代码和部署兼容性，部分 Go module、二进制文件、数据库名、Docker service 等内部标识仍保留 `sub2api` 名称。
 
 ## 核心能力
 
@@ -46,13 +45,13 @@ ClaudeAPI 的界面和当前代码包含以下平台能力：
 
 常用接口包括：
 
-| 接口或链路 | 用途 |
-| --- | --- |
-| `/v1/messages` | Anthropic Messages 兼容接口 |
+| 接口或链路       | 用途                           |
+| ---------------- | ------------------------------ |
+| `/v1/messages`   | Anthropic Messages 兼容接口    |
 | OpenAI Responses | Responses/Codex 请求转发与转换 |
-| HTTP / SSE | 普通请求和流式响应 |
-| WebSocket | OpenAI Responses 长连接场景 |
-| `/health` | 服务健康检查 |
+| HTTP / SSE       | 普通请求和流式响应             |
+| WebSocket        | OpenAI Responses 长连接场景    |
+| `/health`        | 服务健康检查                   |
 
 不同平台、账号类型和模型的功能覆盖可能不同，最终以管理后台可配置项和当前代码实现为准。
 
@@ -69,11 +68,11 @@ ClaudeAPI 的界面和当前代码包含以下平台能力：
 
 ## 界面预览
 
-> 下列截图来自较早的 v0.1.141 界面，仅用于展示整体设计；当前代码版本为 v0.1.155，具体功能和布局以实际部署为准。
+> 下列截图来自较早的 v0.1.141 界面，仅用于展示整体设计；当前代码版本为 v0.1.156，具体功能和布局以实际部署为准。
 
 ### 首页
 
-![ClaudeAPI 首页](img/ScreenShot_2026-07-01_144552_620.png)
+![ClaudeAPI 首页](img/ScreenShot_2026-07-01_144513_757.png)
 
 ### 运维监控
 
@@ -81,18 +80,18 @@ ClaudeAPI 的界面和当前代码包含以下平台能力：
 
 ### 管理控制台
 
-![ClaudeAPI 管理控制台](img/ScreenShot_2026-07-01_144513_757.png)
+![ClaudeAPI 管理控制台](img/ScreenShot_2026-07-01_144552_620.png)
 
 ## 技术栈
 
-| 模块 | 技术 |
-| --- | --- |
-| 后端 | Go 1.26.5、Gin、Ent、Viper |
-| 前端 | Vue 3、TypeScript 5.6、Vite 5、Pinia、Tailwind CSS |
-| 数据库 | PostgreSQL 18 |
-| 缓存与协调 | Redis 8 |
-| 构建与部署 | pnpm 9、Docker、Docker Compose |
-| 测试 | Go Test、Vitest、Vue Test Utils |
+| 模块       | 技术                                               |
+| ---------- | -------------------------------------------------- |
+| 后端       | Go 1.26.5、Gin、Ent、Viper                         |
+| 前端       | Vue 3、TypeScript 5.6、Vite 5、Pinia、Tailwind CSS |
+| 数据库     | PostgreSQL 18                                      |
+| 缓存与协调 | Redis 8                                            |
+| 构建与部署 | pnpm 9、Docker、Docker Compose                     |
+| 测试       | Go Test、Vitest、Vue Test Utils                    |
 
 生产镜像使用多阶段构建：先编译 Vue 前端，再将前端产物嵌入 Go 二进制，最终通过单个服务提供 API 和 Web 控制台。
 
@@ -116,8 +115,8 @@ cd ClaudeAPI
 
 ```bash
 docker build \
-  --build-arg VERSION=0.1.155 \
-  -t claudeapi:0.1.155 \
+  --build-arg VERSION=0.1.156 \
+  -t claudeapi:0.1.156 \
   .
 ```
 
@@ -145,7 +144,7 @@ image: weishaw/sub2api:latest
 改为本地构建的镜像：
 
 ```yaml
-image: claudeapi:0.1.155
+image: claudeapi:0.1.156
 ```
 
 启动服务：
@@ -224,15 +223,10 @@ ClaudeAPI/
 
 - GitHub：<https://github.com/YA52077/ClaudeAPI>
 - Issues：<https://github.com/YA52077/ClaudeAPI/issues>
+- QQ ：`7504544`
 - QQ 群：`746280829`
 
 提交问题时，请提供脱敏后的版本号、部署方式、错误日志和复现步骤。请勿公开发送任何账号凭据或密钥。
-
-## 上游与许可证
-
-ClaudeAPI 基于 [Wei-Shaw/sub2api](https://github.com/Wei-Shaw/sub2api) 开发，并持续合并其后端功能、协议兼容和安全更新。本仓库主要维护 ClaudeAPI 品牌、前端页面、中文体验和适用于本项目的集成调整。
-
-项目遵循 [GNU Lesser General Public License v3.0 or later](LICENSE)。使用、修改和分发时，请同时遵守许可证要求并保留必要的上游版权与来源说明。
 
 ---
 
