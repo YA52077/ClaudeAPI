@@ -3,11 +3,9 @@
 
 # ClaudeAPI
 
-[![在线体验](https://img.shields.io/badge/在线体验-codex.48nh.com-18b8b1?style=for-the-badge)](https://codex.48nh.com)
-
 **统一的大模型 API 网关与运营管理平台**
-
-[![Version](https://img.shields.io/badge/version-v0.1.156-14b8a6.svg)](backend/cmd/server/VERSION)
+[![在线体验](https://img.shields.io/badge/在线体验-codex.48nh.com-18b8b1?style=for-the-badge)](https://codex.48nh.com)
+[![Version](https://img.shields.io/badge/version-v0.1.157-14b8a6.svg)](backend/cmd/server/VERSION)
 [![Go](https://img.shields.io/badge/Go-1.26.5-00ADD8.svg)](https://go.dev/)
 [![Vue](https://img.shields.io/badge/Vue-3-4FC08D.svg)](https://vuejs.org/)
 [![License](https://img.shields.io/badge/license-LGPL--3.0--or--later-blue.svg)](LICENSE)
@@ -31,7 +29,8 @@ ClaudeAPI 是一个面向个人开发者、团队和 API 运营场景的统一 A
 - **精细化运营**：管理用户、分组、API Key、订阅、余额、倍率、配额和并发限制。
 - **用量与计费**：记录请求、Token、模型和费用数据，支持用量查询与统计分析。
 - **管理与监控**：内置管理控制台、账号状态、渠道监控、系统日志和运营数据面板。
-- **安全控制**：提供 JWT、TOTP、上游 URL 校验、CORS、响应头过滤和敏感配置管理能力。
+- **安全控制**：提供 JWT、TOTP、会话绑定、敏感操作二次验证、管理审计日志和上游访问控制。
+- **异步图片任务**：支持异步图片生成与编辑、任务状态轮询，以及使用 S3 兼容对象存储保存结果；详见 [异步图片任务说明](docs/ASYNC_IMAGE_TASKS.md)。
 
 ## 模型与协议
 
@@ -68,7 +67,7 @@ ClaudeAPI 的界面和当前代码包含以下平台能力：
 
 ## 界面预览
 
-> 下列截图来自较早的 v0.1.141 界面，仅用于展示整体设计；当前代码版本为 v0.1.156，具体功能和布局以实际部署为准。
+> 下列截图来自较早的 v0.1.141 界面，仅用于展示整体设计；当前代码版本为 v0.1.157，具体功能和布局以实际部署为准。
 
 ### 首页
 
@@ -115,8 +114,8 @@ cd ClaudeAPI
 
 ```bash
 docker build \
-  --build-arg VERSION=0.1.156 \
-  -t claudeapi:0.1.156 \
+  --build-arg VERSION=0.1.157 \
+  -t claudeapi:0.1.157 \
   .
 ```
 
@@ -144,7 +143,7 @@ image: weishaw/sub2api:latest
 改为本地构建的镜像：
 
 ```yaml
-image: claudeapi:0.1.156
+image: claudeapi:0.1.157
 ```
 
 启动服务：
