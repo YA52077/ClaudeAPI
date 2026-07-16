@@ -4,7 +4,7 @@
 # ClaudeAPI
 
 **统一的大模型 API 网关与运营管理平台**
-[![在线体验](https://img.shields.io/badge/在线体验-codex.48nh.com-18b8b1?style=for-the-badge)](https://codex.48nh.com)
+[![在线体验](https://img.shields.io/badge/在线体验-codex.6stu.com-18b8b1?style=for-the-badge)](https://codex.6stu.com)
 [![Version](https://img.shields.io/badge/version-v0.1.157-14b8a6.svg)](backend/cmd/server/VERSION)
 [![Go](https://img.shields.io/badge/Go-1.26.5-00ADD8.svg)](https://go.dev/)
 [![Vue](https://img.shields.io/badge/Vue-3-4FC08D.svg)](https://vuejs.org/)

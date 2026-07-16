@@ -651,8 +651,8 @@ import {
 import { useClipboard } from '@/composables/useClipboard'
 import Icon from '@/components/icons/Icon.vue'
 
-const GITHUB_REPO = 'Wei-Shaw/sub2api'
-// Docker Hub image published by CI (tags carry no "v" prefix, e.g. weishaw/sub2api:0.1.146)
+const GITHUB_REPO = 'YA52077/ClaudeAPI'
+// Keep the upstream Docker image until this fork publishes its own release images.
 const DOCKER_IMAGE = 'weishaw/sub2api'
 
 const { t } = useI18n()
