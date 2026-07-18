@@ -5,7 +5,7 @@
 
 **统一的大模型 API 网关与运营管理平台**
 [![在线体验](https://img.shields.io/badge/在线体验-codex.6stu.com-18b8b1?style=for-the-badge)](https://codex.6stu.com)
-[![Version](https://img.shields.io/badge/version-v0.1.157-14b8a6.svg)](backend/cmd/server/VERSION)
+[![Version](https://img.shields.io/badge/version-v0.1.160-14b8a6.svg)](backend/cmd/server/VERSION)
 [![Go](https://img.shields.io/badge/Go-1.26.5-00ADD8.svg)](https://go.dev/)
 [![Vue](https://img.shields.io/badge/Vue-3-4FC08D.svg)](https://vuejs.org/)
 [![License](https://img.shields.io/badge/license-LGPL--3.0--or--later-blue.svg)](LICENSE)
@@ -30,7 +30,9 @@ ClaudeAPI 是一个面向个人开发者、团队和 API 运营场景的统一 A
 - **用量与计费**：记录请求、Token、模型和费用数据，支持用量查询与统计分析。
 - **管理与监控**：内置管理控制台、账号状态、渠道监控、系统日志和运营数据面板。
 - **安全控制**：提供 JWT、TOTP、会话绑定、敏感操作二次验证、管理审计日志和上游访问控制。
+- **提示词审计**：支持多个 OpenAI 兼容审计节点、异步或阻断扫描、风险策略和事件管理；该功能默认关闭，启用后审计事件可保存完整提示词，请严格控制数据库、备份和管理员访问权限。
 - **异步图片任务**：支持异步图片生成与编辑、任务状态轮询，以及使用 S3 兼容对象存储保存结果；详见 [异步图片任务说明](docs/ASYNC_IMAGE_TASKS.md)。
+- **Grok 媒体调度**：归一化图片引用格式，并根据账号媒体资格自动隔离不可用账号；管理员可通过账号扩展配置覆盖自动判断。
 
 ## 模型与协议
 
@@ -67,7 +69,7 @@ ClaudeAPI 的界面和当前代码包含以下平台能力：
 
 ## 界面预览
 
-> 下列截图来自较早的 v0.1.141 界面，仅用于展示整体设计；当前代码版本为 v0.1.157，具体功能和布局以实际部署为准。
+> 下列截图来自较早的 v0.1.141 界面，仅用于展示整体设计；当前代码版本为 v0.1.160，具体功能和布局以实际部署为准。
 
 ### 首页
 
@@ -114,8 +116,8 @@ cd ClaudeAPI
 
 ```bash
 docker build \
-  --build-arg VERSION=0.1.157 \
-  -t claudeapi:0.1.157 \
+  --build-arg VERSION=0.1.160 \
+  -t claudeapi:0.1.160 \
   .
 ```
 
@@ -143,7 +145,7 @@ image: weishaw/sub2api:latest
 改为本地构建的镜像：
 
 ```yaml
-image: claudeapi:0.1.157
+image: claudeapi:0.1.160
 ```
 
 启动服务：
